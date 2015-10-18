@@ -144,7 +144,9 @@ public class HAMA_TEST
             
         
             //superstep -1 :搞定The_Distance与The_Distance_Beta
-            getInitialDistanceALPHA(peer);
+//            getInitialDistanceALPHA(peer);
+            
+            getInitialDistanceBETA(peer);
             
             // superstep 0 :get initial matrix
             getInitialMatrix(peer);
@@ -408,7 +410,7 @@ public class HAMA_TEST
           throws IOException, SyncException, InterruptedException {
         if (The_Distance == null) {
                 The_Distance = new double[CityNum][CityNum];
-                The_Distance_Beta = new double[CityNum][CityNum];
+
                 double dbTemp=0.0;
                 for (int i=0;i<CityNum;i++)
                 {
@@ -462,7 +464,7 @@ public class HAMA_TEST
 
         HamaConfiguration conf = new HamaConfiguration();
 
-        conf.set("max.iterations", "5");
+        conf.set("max.iterations", "");
 
         BSPJob job = new BSPJob(conf);
         // set the BSP class which shall be executed
@@ -479,10 +481,15 @@ public class HAMA_TEST
 
         BSPJobClient jobClient = new BSPJobClient(conf);
         ClusterStatus cluster = jobClient.getClusterStatus(true);
-        job.setNumBspTask(cluster.getMaxTasks());
-//        job.setNumBspTask(2);
-        job.waitForCompletion(true);
+//        job.setNumBspTask(cluster.getMaxTasks());
+        job.setNumBspTask(5);
+        long startTime = System.currentTimeMillis();
+        if (job.waitForCompletion(true)) {
         printOutput(conf);
+        System.out.println("Job Finished in "
+          + (System.currentTimeMillis() - startTime) / 1000.0 + " seconds");
+        }
+
     }
 
 }
